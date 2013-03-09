@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8">
 
-		<title>reveal.js - The HTML Presentation Framework</title>
+		<title>AngularJS</title>
 
 		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
 		<meta name="author" content="Hakim El Hattab">
@@ -15,7 +15,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 		<link rel="stylesheet" href="css/reveal.min.css">
-		<link rel="stylesheet" href="css/theme/default.css" id="theme">
+		<link rel="stylesheet" href="css/theme/jan.css" id="theme">
 
 		<!-- For syntax highlighting -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
@@ -30,7 +30,7 @@
 		<![endif]-->
 	</head>
 
-	<body>
+	<body ng-app="angularReveal">
 
 		<div class="reveal">
 
@@ -38,62 +38,65 @@
 			<div class="slides">
 
 				<section>
-					<h1>Reveal.js</h1>
-					<h3>HTML Presentations Made Easy</h3>
+					<h1>Angular.js</h1>
+					<h3>Javascript Frontend MVC Framework</h3>
 					<p>
-						<small>Created by <a href="http://hakim.se">Hakim El Hattab</a> / <a href="http://twitter.com/hakimel">@hakimel</a></small>
+						<small>Presentation by <a href="http://jan.varwig.org">Jan Varwig</a> / <a href="http://twitter.com/agento">@agento</a></small>
 					</p>
 				</section>
 
 				<section>
-					<h2>Heads Up</h2>
+          <img src="img/AngularJS-large.png" alt="AngularJS">
+					<h2>What is AngularJS</h2>
 					<p>
-						reveal.js is a framework for easily creating beautiful presentations using HTML. You'll need a browser with
-						support for CSS 3D transforms to see it in its full glory.
+            AngularJS is a framework for developing component based Javascript Apps in the browser.
 					</p>
-
-					<aside class="notes">
-						Oh hey, these are some notes. They'll be hidden in your presentation, but you can see them if you open the speaker notes window (hit 's' on your keyboard).
-					</aside>
 				</section>
 
 				<!-- Example of nested vertical slides -->
 				<section>
 					<section>
-						<h2>Vertical Slides</h2>
+						<h2>Difference to other Frameworks</h2>
 						<p>
-							Slides can be nested inside of other slides,
-							try pressing <a href="#" class="navigate-down">down</a>.
+              Why would you use angular over something else?
 						</p>
-						<a href="#" class="image navigate-down">
-							<img width="178" height="238" src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Down arrow">
-						</a>
+						<p>
+              Backbone, Knockout, Ember, Meteor
+						</p>
 					</section>
 					<section>
-						<h2>Basement Level 1</h2>
-						<p>Press down or up to navigate.</p>
+						<h2>Declarative Development</h2>
+            <ul>
+              <li>Describe the structure of your app in HTML</li>
+              <li>Represent your data however you want (pure objects/custom classes)</li>
+              <li>Describe data-dependencies through watchers</li>
+              <li>Change UI state in reaction to data changes</li>
+            </ul>
 					</section>
 					<section>
-						<h2>Basement Level 2</h2>
-						<p>Cornify</p>
-						<a class="test" href="http://cornify.com">
-							<img width="280" height="326" src="https://s3.amazonaws.com/hakim-static/reveal-js/cornify.gif" alt="Unicorn">
-						</a>
-					</section>
-					<section>
-						<h2>Basement Level 3</h2>
-						<p>That's it, time to go back up.</p>
-						<a href="#/2" class="image">
-							<img width="178" height="238" src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Up arrow" style="-webkit-transform: rotate(180deg);">
-						</a>
+						<h2>No templates</h2>
+						<p>The DOM is your template</p>
+            <ul>
+              <li>Describe the structure of your app in HTML</li>
+              <li>Describe data-dependencies through watchers</li>
+            </ul>
 					</section>
 				</section>
 
 				<section>
-					<h2>Point of View</h2>
-					<p>
-						Press <strong>ESC</strong> to enter the slide overview. Hold down alt and click on any element to zoom in on it using <a href="http://lab.hakim.se/zoom-js">zoom.js</a>. Alt + click anywhere to zoom back out.
-					</p>
+					<h2>Why is that so powerful?</h2>
+          <live-example>
+            <script type="text/plain">
+            <form name="form">
+              <p>
+                <input type="text" ng-model="name"/>
+              </p>
+              <p>
+                {{name}}
+              </p>
+            </form>
+            </script>
+          </live-example>
 				</section>
 
 				<section>
@@ -293,10 +296,10 @@ function linkify( selector ) {
 				<section>
 					<h2>Export to PDF</h2>
 					<p>Presentations can be <a href="https://github.com/hakimel/reveal.js#pdf-export">exported to PDF</a>, below is an example that's been uploaded to SlideShare.</p>
-					<iframe id="slideshare" src="http://www.slideshare.net/slideshow/embed_code/13872948" width="455" height="356" style="margin:0;overflow:hidden;border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen> </iframe>
-					<script>
-						document.getElementById('slideshare').attributeName = 'allowfullscreen';
-					</script>
+					<!--<iframe id="slideshare" src="http://www.slideshare.net/slideshow/embed_code/13872948" width="455" height="356" style="margin:0;overflow:hidden;border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen> </iframe>-->
+					<!--<script>-->
+						<!--document.getElementById('slideshare').attributeName = 'allowfullscreen';-->
+					<!--</script>-->
 				</section>
 
 				<section>
@@ -345,6 +348,51 @@ function linkify( selector ) {
 
 		<script src="lib/js/head.min.js"></script>
 		<script src="js/reveal.min.js"></script>
+		<script src="js/jquery-1.9.1.min.js"></script>
+		<script src="js/angular.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+      var angularReveal = angular.module('angularReveal', []);
+      angularReveal.directive('liveExample', function () {
+          return {
+            restrict: 'E',
+            template: '<iframe src="playground.html"></'+'iframe><textarea class="source"></'+'textarea><button ng-click="reloadIframe()">↺</'+'button>',
+            transclude: true,
+            compile: function (tElem, tAttr, transclude) {
+              return function (scope, elem) {
+                scope.foo = 'bar';
+                var code;
+                transclude(scope, function (clone) {
+                  code = $(clone).filter('script')[0].textContent;
+                });
+
+                var iframe = elem.find('iframe')[0];
+
+                window.addEventListener('message', function (event) {
+                  if (event.data === 'iframeReady') {
+                    if (event.source === iframe.contentWindow) {
+                      scope.deploy();
+                    }
+                  }
+                })
+
+                elem.find('textarea').val(code);
+
+                scope.reloadIframe = function () {
+                  iframe.contentWindow.location.reload();
+                };
+
+                scope.deploy = function () {
+                  iframe.contentWindow.postMessage({
+                    'action': 'deploy',
+                    'code': elem.find('textarea').val()
+                  }, '*');
+
+                };
+              }
+            }
+          };
+        })
+    </script>
 
 		<script>
 
