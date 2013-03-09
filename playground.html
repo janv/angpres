@@ -29,6 +29,7 @@
     <script src="js/jquery-1.9.1.min.js"></script>
 		<script src="js/angular.min.js"></script>
     <script type="text/javascript" charset="utf-8">
+      angular.module('demo',[]);
       $(function () {
         window.parent.postMessage('iframeReady', '*');
         $(window).trigger('domReady');
@@ -36,7 +37,7 @@
         window.addEventListener('message', function (event) {
           if (event.data.action === 'deploy') {
             document.write(event.data.code);
-            angular.bootstrap(document);
+            angular.bootstrap(document, ['demo']);
           }
         });
       })

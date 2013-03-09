@@ -115,41 +115,322 @@
                 </p>
               </form>
             </script>
+            <script type="text/plain" title="Todo-List">
+              <code>
+                function Foo($scope){
+                  $scope.tasks = [];
+                  $scope.addTask = function() {
+                    $scope.tasks.push($scope.newTask);
+                    $scope.newTask = null;
+                  };
+                  $scope.removeTask = function (index) {
+                    $scope.tasks.splice(index, 1);
+                  };
+                }
+              </code>
+              <form name="form" ng-controller="Foo">
+                <h2>{{tasks.length}} Tasks</h2>
+                <p>
+                  <input type="text" ng-model="newTask"/>
+                  <button ng-click="addTask()">Add</button>
+                </p>
+                <ul>
+                  <li ng-repeat="(index, task) in tasks">
+                    {{task}} <button ng-click="removeTask(index)">X</button>
+                  </li>
+                </ul>
+              </form>
+            </script>
+            <script type="text/plain" title="Red Square">
+              X: <input type="text" ng-model="x">
+              <br>
+              Y: <input type="text" ng-model="y">
+
+              <div style="background-color: red; width: 20px; height: 20px; position: absolute; left: {{x}}; top: {{y}}"></div>
+                            
+            </script>
           </live-example>
 				</section>
 
+        <section>
+          <h2>Angular Development Model: Classic MVC</h2>
+          <ul>
+            <li>Data driven, component based</li>
+            <li>
+              Directives
+              <ul>
+                <li>Look (DOM)</li>
+                <li>Behavior (Event Handling)</li>
+              </ul>
+            </li>
+            <li>
+              Controller
+              <ul>
+                <li>Provide data to scope</li>
+                <li>Coordinate components &amp; services</li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
 				<section>
-					<h2>rvl.io</h2>
-					<p>
-						If you don't like writing slides in HTML you can use the online editor <a href="http://www.rvl.io" target="_blank">rvl.io</a>.
-					</p>
+          <section>
+            <h2>Library Functions</h2>
+            <ul>
+              <li>Form Validation</li>
+              <li>REST Adapter</li>
+              <li>Cookies</li>
+              <li>LocalStorage</li>
+            </ul>
+          </section>
+          <section>
+            <h2>Niceties</h2>
+            <ul>
+              <li>Small (82kB base Version)</li>
+              <li>Fast</li>
+              <li>Plays very well with others (modularized, clean API, encapsulation)</li>
+              <li>Kills default behavior on Forms & Links (if necessary)</li>
+            </ul>
+          </section>
 				</section>
 
 				<section>
-					<h2>Works in Mobile Safari</h2>
-					<p>
-						Try it out! You can swipe through the slides and pinch your way to the overview.
-					</p>
+					<h2>Power engineered</h2>
+          <ul>
+            <li>Throughtfully designed</li>
+            <li>Proper MVC</li>
+            <li>Dependency Injection Framework</li>
+            <li>Strong testing support</li>
+            <li>Great Documentation</li>
+          </ul>
 				</section>
 
 				<section>
-					<h2>Marvelous Unordered List</h2>
-					<ul>
-						<li>No order here</li>
-						<li>Or here</li>
-						<li>Or here</li>
-						<li>Or here</li>
-					</ul>
+					<h2>How does it work?</h2>
+          <img src="img/magnets.jpg" alt="Fucking Magnets" />
 				</section>
 
 				<section>
-					<h2>Fantastic Ordered List</h2>
-					<ol>
-						<li>One is smaller than...</li>
-						<li>Two is smaller than...</li>
-						<li>Three!</li>
-					</ol>
+          <section>
+            <h2>Modules</h2>
+            <ul>
+              <li>Define modules</li>
+              <li>Declare dependencies</li>
+              <li>Provide services</li>
+              <li>Initialize app</li>
+            </ul>
+          </section>
+          <section>
+            <h2>Define modules</h2>
+<pre><code contenteditable class="javascript">// New Module
+angular.module('demo/controllers',[]);
+angular.module('demo/directives',[]);
+
+// Dependencies
+angular.module('demo', ['demo/controllers', 'demo/directives']);
+</code></pre>
+          </section>
+          <section>
+            <h2>Provide services</h2>
+            <pre><code contenteditable class="javascript">
+angular.module('demo/controllers')
+  .controller('FooCtrl', function($scope){
+    $scope.foo = 'bar';
+    $scope.alert = function(){
+      $scope.foo = 'baz';
+    };
+    $scope.$watch('foo', function (value, old, scope) {
+      scope.fooToo = value;
+    });
+  })
+  .controller('BarCtrl', function($scope, $resource){...});
+            </code></pre>
+          </section>
+          <section>
+            <h2>Initialize app</h2>
+            <pre><code contenteditable class="js">
+angular.bootstrap(document, 'demo');
+            </code></pre>
+            <pre><code contenteditable class="html">
+&lt;body ng-app="demo"&gt;
+  ...
+&lt;/body&gt;
+            </code></pre>
+          </section>
 				</section>
+
+        <section>
+          <section>
+            <h2>Dependency injection</h2>
+            <ul>
+              <li>Declare and provide services</li>
+              <li>Inject services into other services through factories</li>
+            </ul>
+          </section>
+          <section>
+            <h2>Declare and provide</h2>
+            <pre><code contenteditable class="js">
+angular.module('demo')
+  .service('cow', function(){
+    return {
+      moo: function(){
+        alert('Moooo');
+      }
+    };
+  })
+  .service('farm', function(cow){
+    cow.moo();
+  });
+
+            </code></pre>
+
+          </section>
+        </section>
+        <section>
+          <section>
+            <h2>The Angular Compiler</h2>
+            <p>This is where the magic happens</p>
+            <ul>
+              <li class="fragment">Parses the DOM tree for directives</li>
+              <li class="fragment">
+                Found directives
+                <ul>
+                  <li>Manipulate their children further</li>
+                  <li>Populate Scopes with data and functions</li>
+                  <li>Instantiate controllers</li>
+                </ul>
+              </li>
+            </ul>
+          </section>
+          <section>
+            <h2>Directives</h2>
+            <live-example>
+              <script type="text/plain" title="Blink">
+                <code>
+                  angular.module('demo').directive('blink', function() {
+                    return {
+                      restrict: 'E',
+                      link: function(scope, elem, attr){
+                        var visible = true;
+                        var timer = setInterval(function () {
+                          if (visible = !visible) {
+                            elem.show();
+                          } else {
+                            elem.hide();
+                          }
+                        }, attr['interval']);
+                      }
+                    }
+                  })
+                </code>
+                <div ng-app="demo">
+                  <blink interval="500">Long live the 90s</blink>
+                </div>
+              </script>
+              <script type="text/plain" title="Template">
+                <code>
+                  angular.module('demo').directive('with', function() {
+                    return {
+                      restrict: 'A',
+                      template:
+                        '<li ng-repeat="item in items">{{item}}</li>',
+                      link: function(scope, elem, attr){
+                        scope.items = attr['with'].split(',');
+                      }
+                    }
+                  })
+                </code>
+                <div ng-app="demo">
+                  <ul with="a,b,c"></ul>
+                </div>
+              </script>
+              <script type="text/plain" title="Controller">
+                <code>
+                  angular.module('demo')
+                    .controller('FooCtrl', function ($scope) {
+                      $scope.foo = 'Bar';
+                    })
+                    .directive('foo', function() {
+                      return {
+                        restrict: 'C',
+                        scope: true,
+                        controller: 'FooCtrl'
+                      }
+                    })
+                </code>
+                <div ng-app="demo">
+                  Outer Foo: {{foo}}
+                  <br/>
+                  <span class="foo">Inner Foo: {{foo}}</foo>
+                </div>
+              </script>
+            </live-example>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>Scopes</h2>
+            <ul>
+              <li>Central structure of your app</li>
+              <li>Hold functions and data</li>
+              <li>Directives <i>can</i> introduce new Scopes</li>
+              <li>Prototypical inherited</li>
+            </ul>
+          </section>
+          <section>
+            <h2>Inheritance</h2>
+            <ul>
+              <li>Child scope properties overshadow parent scope properties</li>
+              <li></li>
+            </ul>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>Watchers and Binding</h2>
+            <p>Scopes responsible for binding</p>
+            <ul>
+              <li>
+                Dynamic behavior always result of watchers
+                <pre><code>
+$scope.$watch('foo', function(value, old, scope){
+  //...
+});
+
+$scope.$watch(function(scope){
+  return scope.foo;
+}, function(value, old, scope){
+  //...
+});
+                </code></pre>
+                <pre><code ng-non-bindable>
+&lt;span&gt;{{foo}}&lt;/span&gt;
+                </code></pre>
+              </li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>Watchers and Binding</h2>
+            <p>Scopes responsible for binding</p>
+            <ul>
+              <li>Dirty Tracking</li>
+              <ul>
+                <li>Evaluate Watchers, execute handlers, until watchers don't change anymore</li>
+                <li>Until next $digest cycle (triggered by external event)</li>
+              </ul>
+            </ul>
+          </section>
+
+          <section>
+            <h2>Watchers and Binding</h2>
+            <p>Scopes responsible for binding</p>
+            <img src="img/concepts-runtime.png" alt="Digest Cycle" />
+          </section>
+        </section>
+
 
 				<section data-markdown>
 					<script type="text/template">
@@ -374,6 +655,7 @@ function linkify( selector ) {
       angularReveal.directive('liveExample', function ($compile) {
           return {
             restrict: 'E',
+            scope: true,
             template: '<iframe src="playground.html"></'+'iframe><textarea class="source"></'+'textarea><button class="reload" ng-click="reloadIframe()">↺</'+'button><div class="snippets"></'+'a>',
             transclude: true,
             compile: function (tElem, tAttr, transclude) {
@@ -385,7 +667,7 @@ function linkify( selector ) {
                   }).join("\n").replace(/^\s*\n|\n\s*$/g, '').replace(/code>/g, 'script>');
                   return code;
                 }
-                var codeSnippets = [];
+                var codeSnippets = [], hasRun;
 
                 transclude(scope, function (clone) {
                   $(clone).filter('script[title]').each(function(){
@@ -406,18 +688,19 @@ function linkify( selector ) {
                 elem.find('textarea').val(codeSnippets[0].code);
 
                 var messageListener = function (event) {
-                  if (event.data === 'iframeReady' && event.source === iframe.contentWindow) {
+                  if (hasRun && event.data === 'iframeReady' && event.source === iframe.contentWindow) {
                     scope.deploy();
                   }
                 };
 
                 window.addEventListener('message', messageListener);
-
+                
                 scope.loadSnippet = function(index) {
                   elem.find('textarea').val(codeSnippets[index].code);
                 }
 
                 scope.reloadIframe = function () {
+                  hasRun = true;
                   iframe.contentWindow.location.reload();
                 };
 
@@ -430,6 +713,7 @@ function linkify( selector ) {
 
                 scope.$on('$destroy', function () {
                   window.removeEventListener('message', messageListener);
+                  Reveal.removeEventListener('fragmenthidden', clearIframe);
                 })
               }
             }
