@@ -86,7 +86,7 @@
 				<section>
 					<h2>Why is that so powerful?</h2>
           <live-example>
-            <script type="text/plain">
+            <script type="text/plain" title="Normal">
             <form name="form">
               <p>
                 <input type="text" ng-model="name"/>
@@ -95,6 +95,25 @@
                 {{name}}
               </p>
             </form>
+            </script>
+            <script type="text/plain" title="Reverse">
+              <code>
+                function Foo($scope){
+                  $scope.rev = function(s) {
+                    if (s) {
+                      return s.split('').reverse().join('');
+                    }
+                  }
+                }
+              </code>
+              <form name="form" ng-controller="Foo">
+                <p>
+                  <input type="text" ng-model="name"/>
+                </p>
+                <p>
+                  {{rev(name)}}
+                </p>
+              </form>
             </script>
           </live-example>
 				</section>
@@ -352,30 +371,51 @@ function linkify( selector ) {
 		<script src="js/angular.min.js"></script>
     <script type="text/javascript" charset="utf-8">
       var angularReveal = angular.module('angularReveal', []);
-      angularReveal.directive('liveExample', function () {
+      angularReveal.directive('liveExample', function ($compile) {
           return {
             restrict: 'E',
-            template: '<iframe src="playground.html"></'+'iframe><textarea class="source"></'+'textarea><button ng-click="reloadIframe()">↺</'+'button>',
+            template: '<iframe src="playground.html"></'+'iframe><textarea class="source"></'+'textarea><button class="reload" ng-click="reloadIframe()">↺</'+'button><div class="snippets"></'+'a>',
             transclude: true,
             compile: function (tElem, tAttr, transclude) {
               return function (scope, elem) {
-                scope.foo = 'bar';
-                var code;
+                function stripPrefix(code) {
+                  var codeLinePrefixLength = code.split("\n")[1].match(/^\s+/)[0].length;
+                  code = $.map(code.split("\n"), function (line) {
+                    return line.slice(codeLinePrefixLength);
+                  }).join("\n").replace(/^\s*\n|\n\s*$/g, '').replace(/code>/g, 'script>');
+                  return code;
+                }
+                var codeSnippets = [];
+
                 transclude(scope, function (clone) {
-                  code = $(clone).filter('script')[0].textContent;
+                  $(clone).filter('script[title]').each(function(){
+                    codeSnippets.push({
+                      title: $(this).attr('title'),
+                      code: stripPrefix(this.textContent)
+                    })
+                  });
+                });
+
+                $.each(codeSnippets, function (index) {
+                  var buttonElement = $('<button ng-click="loadSnippet('+index+')">'+(this.title || index)+'</'+'button>');
+                  $compile(buttonElement)(scope);
+                  elem.find('.snippets').append(buttonElement);
                 });
 
                 var iframe = elem.find('iframe')[0];
+                elem.find('textarea').val(codeSnippets[0].code);
 
-                window.addEventListener('message', function (event) {
-                  if (event.data === 'iframeReady') {
-                    if (event.source === iframe.contentWindow) {
-                      scope.deploy();
-                    }
+                var messageListener = function (event) {
+                  if (event.data === 'iframeReady' && event.source === iframe.contentWindow) {
+                    scope.deploy();
                   }
-                })
+                };
 
-                elem.find('textarea').val(code);
+                window.addEventListener('message', messageListener);
+
+                scope.loadSnippet = function(index) {
+                  elem.find('textarea').val(codeSnippets[index].code);
+                }
 
                 scope.reloadIframe = function () {
                   iframe.contentWindow.location.reload();
@@ -386,8 +426,11 @@ function linkify( selector ) {
                     'action': 'deploy',
                     'code': elem.find('textarea').val()
                   }, '*');
-
                 };
+
+                scope.$on('$destroy', function () {
+                  window.removeEventListener('message', messageListener);
+                })
               }
             }
           };

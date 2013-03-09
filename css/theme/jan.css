@@ -155,35 +155,48 @@ body {
   border: none;
   box-shadow: none;
 }
-
-live-example {
+.reveal live-example {
   display: block;
   position: relative;
   height: 12em;
 }
-live-example iframe {
+.reveal live-example iframe {
   position: absolute;
   top: 0;
   left: 0;
   width: 40%;
-  height: 12em;
+  height: 95%;
   margin-right: 5%;
-  border: 1px solid black;
+  border: 1px solid silver;
+  border-radius: 5px;
 }
-live-example textarea {
+.reveal live-example textarea {
+  display: block;
   position: absolute;
-  font-size: 50%;
+  font-size: 40%;
   font-family: "Monaco";
   top: 0;
-  left: 40%;
+  left: 45%;
   width: 45%;
-  height: 12em;
-  border: 1px solid red;
+  height: 95%;
+  border: 1px solid silver;
+  border-radius: 5px;
 }
-live-example button {
-  position: absolute;
-  top: 0;
-  right: 0;
+.reveal live-example button {
   border-radius: 4px;
   background-color: white;
+}
+.reveal live-example .reload {
+  position: absolute;
+  top: 0;
+  left: 95%;
+}
+.reveal live-example .snippets {
+  text-align: left;
+  position: absolute;
+  top: 20px;
+  left: 92%;
+}
+.reveal live-example .snippets button {
+  width: 70%;
 }

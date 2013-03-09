@@ -34,12 +34,9 @@
         $(window).trigger('domReady');
 
         window.addEventListener('message', function (event) {
-          console.log('playground received', event.data);
           if (event.data.action === 'deploy') {
             document.write(event.data.code);
-            console.log('written code to doc', event.data.code);
             angular.bootstrap(document);
-            console.log('strapped boot');
           }
         });
       })
