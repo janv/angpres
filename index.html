@@ -16,6 +16,7 @@
 
 		<!-- For syntax highlighting -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
+		<link rel="stylesheet" href="codemirror/lib/codemirror.css">
 
 		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
 		<script>
@@ -28,6 +29,12 @@
 	</head>
 
 	<body ng-app="angularReveal">
+    <script type="text/ng-template" charset="utf-8" id="liveExample.html">
+      <div class="playground"></div>
+      <textarea class="source"></textarea>
+      <button class="reload" ng-click="run()">↺</button>
+      <div class="snippets"></a>
+    </script>
 
 		<div class="reveal">
 
@@ -84,7 +91,7 @@
 				<section>
 					<h2>Why is that so powerful?</h2>
           <live-example>
-            <script type="text/plain" title="Normal">
+            <script type="text/template" data-title="Normal">
             <form name="form">
               <p>
                 <input type="text" ng-model="name"/>
@@ -94,7 +101,7 @@
               </p>
             </form>
             </script>
-            <script type="text/plain" title="Reverse">
+            <script type="text/template" data-title="Normal">
               <code>
                 function Foo($scope){
                   $scope.rev = function(s) {
@@ -113,7 +120,7 @@
                 </p>
               </form>
             </script>
-            <script type="text/plain" title="Todo-List">
+            <script type="text/template" data-title="Reverse">
               <code>
                 function Foo($scope){
                   $scope.tasks = [];
@@ -139,7 +146,7 @@
                 </ul>
               </form>
             </script>
-            <script type="text/plain" title="Red Square">
+            <script type="text/template" data-title="Red Square">
               X: <input type="text" ng-model="x">
               <br>
               Y: <input type="text" ng-model="y">
@@ -303,7 +310,7 @@ angular.module('demo')
           <section>
             <h2>Directives</h2>
             <live-example>
-              <script type="text/plain" title="Blink">
+              <script type="text/template" data-title="Blink">
                 <code>
                   angular.module('demo').directive('blink', function() {
                     return {
@@ -325,7 +332,7 @@ angular.module('demo')
                   <blink interval="500">Long live the 90s</blink>
                 </div>
               </script>
-              <script type="text/plain" title="Template">
+              <script type="text/template" data-title="Template">
                 <code>
                   angular.module('demo').directive('with', function() {
                     return {
@@ -342,7 +349,7 @@ angular.module('demo')
                   <ul with="a,b,c"></ul>
                 </div>
               </script>
-              <script type="text/plain" title="Controller">
+              <script type="text/template" data-title="Controller">
                 <code>
                   angular.module('demo')
                     .controller('FooCtrl', function ($scope) {
@@ -467,7 +474,7 @@ $scope.$on('eventName', function handler(event, payload){
           <h2>Forms</h2>
           
           <live-example>
-            <script type="text/plain" title="Forms">
+            <script type="text/template" data-title="Forms">
               <div ng-controller="Controller">
                 <form novalidate class="css-form">
                   Name:
@@ -542,26 +549,27 @@ $scope.$on('eventName', function handler(event, payload){
           return {
             restrict: 'E',
             scope: true,
-            template: '<iframe src="playground.html"></'+'iframe><textarea class="source"></'+'textarea><button class="reload" ng-click="reloadIframe()">↺</'+'button><div class="snippets"></'+'a>',
+            templateUrl: 'liveExample.html',
             transclude: true,
             compile: function (tElem, tAttr, transclude) {
-              return function (scope, elem) {
-                function stripPrefix(code) {
-                  var codeLinePrefixLength = code.split("\n")[1].match(/^\s+/)[0].length;
-                  code = $.map(code.split("\n"), function (line) {
-                    return line.slice(codeLinePrefixLength);
-                  }).join("\n").replace(/^\s*\n|\n\s*$/g, '').replace(/code>/g, 'script>');
-                  return code;
-                }
-                var codeSnippets = [], hasRun;
+              return function postLink(scope, elem) {
+                var codeSnippets = [];
 
                 transclude(scope, function (clone) {
-                  $(clone).filter('script[title]').each(function(){
+                  $(clone).filter('script[data-title]').each(function(){
                     codeSnippets.push({
-                      title: $(this).attr('title'),
+                      title: $(this).attr('data-title'),
                       code: stripPrefix(this.textContent)
-                    })
+                    });
                   });
+
+                  function stripPrefix(code) {
+                    var codeLinePrefixLength = code.split("\n")[1].match(/^\s+/)[0].length;
+                    code = $.map(code.split("\n"), function (line) {
+                      return line.slice(codeLinePrefixLength);
+                    }).join("\n").replace(/^\s*\n|\n\s*$/g, '').replace(/code>/g, 'script>');
+                    return code;
+                  }
                 });
 
                 $.each(codeSnippets, function (index) {
@@ -570,37 +578,21 @@ $scope.$on('eventName', function handler(event, payload){
                   elem.find('.snippets').append(buttonElement);
                 });
 
-                var iframe = elem.find('iframe')[0];
+                var playground = elem.find('.playground');
                 elem.find('textarea').val(codeSnippets[0].code);
 
-                var messageListener = function (event) {
-                  if (hasRun && event.data === 'iframeReady' && event.source === iframe.contentWindow) {
-                    scope.deploy();
-                  }
-                };
-
-                window.addEventListener('message', messageListener);
-                
                 scope.loadSnippet = function(index) {
                   elem.find('textarea').val(codeSnippets[index].code);
                 }
 
-                scope.reloadIframe = function () {
-                  hasRun = true;
-                  iframe.contentWindow.location.reload();
+                scope.run = function () {
+                  var newPlayground = $('<div class="playground"><'+'/div>').html(elem.find('textArea').val());
+                  newPlayground.insertAfter(playground);
+                  playground.remove();
+                  playground = newPlayground;
+                  angular.module('demo', []);
+                  angular.bootstrap(playground, ['demo']);
                 };
-
-                scope.deploy = function () {
-                  iframe.contentWindow.postMessage({
-                    'action': 'deploy',
-                    'code': elem.find('textarea').val()
-                  }, '*');
-                };
-
-                scope.$on('$destroy', function () {
-                  window.removeEventListener('message', messageListener);
-                  Reveal.removeEventListener('fragmenthidden', clearIframe);
-                })
               }
             }
           };

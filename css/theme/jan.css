@@ -160,7 +160,7 @@ body {
   position: relative;
   height: 12em;
 }
-.reveal live-example iframe {
+.reveal live-example .playground {
   position: absolute;
   top: 0;
   left: 0;
