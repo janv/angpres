@@ -46,38 +46,43 @@ $selectionBackgroundColor: rgba(0, 0, 0, 0.99)
     display: block
     position: relative
     height: 12em
-    iframe
+    .playground
       position: absolute
       top: 0
       left: 0
-      width: 40%
-      height: 95%
+      width: 50%
+      height: 100%
       margin-right: 5%
       border: 1px solid silver
-      border-radius: 5px
-    textarea
+      border-radius: 5px 0 0 5px
+    .CodeMirror
       display: block
       position: absolute
       font-size: 40%
       font-family: 'Monaco'
       top: 0
-      left: 45%
-      width: 45%
-      height: 95%
+      left: 50%
+      width: 50%
+      height: 100%
       border: 1px solid silver
-      border-radius: 5px
-    button
-      border-radius: 4px
-      background-color: white
+      border-radius: 0 5px 5px 0
+      // Fixes:
+      .CodeMirror-lines
+        padding: 0.4em 0
+      .CodeMirror-gutters
+        //background-color: #444
+        padding-right: 0.4em
+      line-height: 1.2
+      pre
+        box-shadow: none
     .reload
       position: absolute
-      top: 0
-      left: 95%
-    .snippets
+      top: 2px
+      right: 50%
+    select
       text-align: left
       button
         width: 70%
       position: absolute
-      top: 20px
-      left: 92%
-      right: 0
+      top: 2px
+      right: 1px
